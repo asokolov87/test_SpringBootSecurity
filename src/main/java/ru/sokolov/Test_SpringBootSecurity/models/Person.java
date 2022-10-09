@@ -31,14 +31,23 @@ public class Person {
     @Email
     private String email;
 
+    @NotEmpty(message = "Поле не должно быть пустым")
+    @Size(min = 5, max = 100, message = "длина должна быть от 5 до 100 символов")
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "password")
+    private String password;
+
     @OneToMany(mappedBy = "owner")
     private List<Book> books;
 
     public Person() {
 
     }
-    public Person(String name, int age, String email) {
+    public Person(String name, int age, String email, String username) {
         this.name = name;
+        this.username = username;
         this.age = age;
         this.email = email;
     }
@@ -81,6 +90,22 @@ public class Person {
 
     public void setBooks(List<Book> books) {
         this.books = books;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

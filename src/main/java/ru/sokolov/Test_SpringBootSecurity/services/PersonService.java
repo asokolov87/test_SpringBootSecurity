@@ -2,11 +2,15 @@ package ru.sokolov.Test_SpringBootSecurity.services;
 
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.sokolov.Test_SpringBootSecurity.models.Book;
 import ru.sokolov.Test_SpringBootSecurity.models.Person;
 import ru.sokolov.Test_SpringBootSecurity.repositories.PersonRepository;
+import ru.sokolov.Test_SpringBootSecurity.security.PersonDetails;
 
 import java.util.Collections;
 import java.util.Date;
@@ -15,7 +19,8 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-public class PersonService {
+//интерфейс UserDetailsService нужен чтобы показать SpringSecurity, что этот класс загружает пользователя по username
+public class PersonService implements UserDetailsService {
 
     private final PersonRepository personRepository;
 
@@ -70,5 +75,14 @@ public class PersonService {
 
     public Optional <Person> getPersonByFullName (String name){
         return Optional.ofNullable(personRepository.findByName(name));
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<Person> person =  personRepository.findByUsername(username);
+
+        if(person.isEmpty())
+            throw new UsernameNotFoundException("User not found");
+        return new PersonDetails(person.get());
     }
 }
