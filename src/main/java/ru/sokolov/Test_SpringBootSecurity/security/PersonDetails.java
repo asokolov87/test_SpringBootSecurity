@@ -51,7 +51,7 @@ public class PersonDetails implements UserDetails {
         return true;
     }
 
-    //для получения данных аутинфицированного пользователя
+    //для получения данных аутентифицированного пользователя
     public Person getPerson(){
         return this.person;
     }
