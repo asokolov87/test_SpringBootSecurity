@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.sokolov.Test_SpringBootSecurity.models.Person;
-import ru.sokolov.Test_SpringBootSecurity.services.PersonService;
+import ru.sokolov.Test_SpringBootSecurity.services.RegisterService;
 import ru.sokolov.Test_SpringBootSecurity.util.PersonValidator;
 
 import javax.validation.Valid;
@@ -18,12 +18,12 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final PersonValidator personValidator;
-    private final PersonService personService;
+    private final RegisterService registerService;
 
     @Autowired
-    public AuthController(PersonValidator personValidator, PersonService personService) {
+    public AuthController(PersonValidator personValidator, RegisterService registerService) {
         this.personValidator = personValidator;
-        this.personService = personService;
+        this.registerService = registerService;
     }
 
     @GetMapping("/login")
@@ -40,8 +40,7 @@ public class AuthController {
     public String performRegistration(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult){
         personValidator.validate(person, bindingResult);
         if(bindingResult.hasErrors()) return "auth/registration";
-
-        personService.save(person);
+        registerService.register(person);
         return "redirect:/auth/login";
     }
 }
