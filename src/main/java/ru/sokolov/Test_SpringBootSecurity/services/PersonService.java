@@ -85,4 +85,8 @@ public class PersonService implements UserDetailsService {
             throw new UsernameNotFoundException("User not found");
         return new PersonDetails(person.get());
     }
+
+    public Optional<Person> getPersonByUsername(String username){
+        return personRepository.findByUsername(username);
+    }
 }
