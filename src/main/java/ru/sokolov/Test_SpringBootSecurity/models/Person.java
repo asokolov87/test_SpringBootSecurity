@@ -2,10 +2,7 @@ package ru.sokolov.Test_SpringBootSecurity.models;
 
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 
 @Entity  //объявление сущности
@@ -38,6 +35,9 @@ public class Person {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "role")
+    private String role;
 
     @OneToMany(mappedBy = "owner")
     private List<Book> books;
@@ -106,6 +106,14 @@ public class Person {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override

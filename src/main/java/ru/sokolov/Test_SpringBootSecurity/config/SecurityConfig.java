@@ -3,6 +3,7 @@ package ru.sokolov.Test_SpringBootSecurity.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -12,6 +13,7 @@ import ru.sokolov.Test_SpringBootSecurity.services.PersonDetailsService;
 import ru.sokolov.Test_SpringBootSecurity.services.PersonService;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PersonDetailsService personDetailsService;
@@ -27,8 +29,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception{
         http
                 .authorizeRequests()
+              //  .antMatchers("/admin").hasRole("ADMIN")
                 .antMatchers("/auth/login","/error", "/auth/registration").permitAll()   // разрешенные странички всем
-                .anyRequest().authenticated()   // все остальные доступны только прошедшим авторизацию
+                .anyRequest().hasAnyRole("USER", "ADMIN")   // все остальные доступны только прошедшим авторизацию
                 .and()
                 .formLogin().loginPage("/auth/login")
                 .loginProcessingUrl("/process_login") // метод который приходит из POST формы с вводом логина и пароля
